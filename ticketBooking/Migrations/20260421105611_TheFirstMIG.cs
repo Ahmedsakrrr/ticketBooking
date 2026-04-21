@@ -6,11 +6,26 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace TicketBooking.Migrations
 {
     /// <inheritdoc />
-    public partial class AddTableInDataBase : Migration
+    public partial class TheFirstMIG : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Actors",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Img = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Actors", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Categories",
                 columns: table => new
@@ -54,12 +69,19 @@ namespace TicketBooking.Migrations
                     Statu = table.Column<bool>(type: "bit", nullable: false),
                     DateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
                     MinImg = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ActorId = table.Column<int>(type: "int", nullable: false),
                     CategoryId = table.Column<int>(type: "int", nullable: false),
                     CinemaId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Movies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Movies_Actors_ActorId",
+                        column: x => x.ActorId,
+                        principalTable: "Actors",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Movies_Categories_CategoryId",
                         column: x => x.CategoryId,
@@ -92,31 +114,10 @@ namespace TicketBooking.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "Actors",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Img = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MovieId = table.Column<int>(type: "int", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Actors", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Actors_Movies_MovieId",
-                        column: x => x.MovieId,
-                        principalTable: "Movies",
-                        principalColumn: "Id");
-                });
-
             migrationBuilder.CreateIndex(
-                name: "IX_Actors_MovieId",
-                table: "Actors",
-                column: "MovieId");
+                name: "IX_Movies_ActorId",
+                table: "Movies",
+                column: "ActorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Movies_CategoryId",
@@ -133,13 +134,13 @@ namespace TicketBooking.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Actors");
+                name: "Movies");
 
             migrationBuilder.DropTable(
                 name: "MovieSubImgs");
 
             migrationBuilder.DropTable(
-                name: "Movies");
+                name: "Actors");
 
             migrationBuilder.DropTable(
                 name: "Categories");

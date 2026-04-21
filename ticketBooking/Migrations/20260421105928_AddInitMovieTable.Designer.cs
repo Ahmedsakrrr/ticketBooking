@@ -12,8 +12,8 @@ using TicketBooking.Data;
 namespace TicketBooking.Migrations
 {
     [DbContext(typeof(TicketBookingDbContext))]
-    [Migration("20260420165747_AddNewColumnInMovie")]
-    partial class AddNewColumnInMovie
+    [Migration("20260421105928_AddInitMovieTable")]
+    partial class AddInitMovieTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,16 +40,11 @@ namespace TicketBooking.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("MovieId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("MovieId");
 
                     b.ToTable("Actors");
                 });
@@ -112,6 +107,9 @@ namespace TicketBooking.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<int>("ActorId")
+                        .HasColumnType("int");
+
                     b.Property<int>("CategoryId")
                         .HasColumnType("int");
 
@@ -122,10 +120,6 @@ namespace TicketBooking.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Kind")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("MinImg")
@@ -143,6 +137,8 @@ namespace TicketBooking.Migrations
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ActorId");
 
                     b.HasIndex("CategoryId");
 
@@ -164,15 +160,14 @@ namespace TicketBooking.Migrations
                     b.ToTable("MovieSubImgs");
                 });
 
-            modelBuilder.Entity("TicketBooking.Models.Actor", b =>
-                {
-                    b.HasOne("TicketBooking.Models.Movie", null)
-                        .WithMany("Actors")
-                        .HasForeignKey("MovieId");
-                });
-
             modelBuilder.Entity("TicketBooking.Models.Movie", b =>
                 {
+                    b.HasOne("TicketBooking.Models.Actor", "Actors")
+                        .WithMany()
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("TicketBooking.Models.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
@@ -184,6 +179,8 @@ namespace TicketBooking.Migrations
                         .HasForeignKey("CinemaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Actors");
 
                     b.Navigation("Category");
 
@@ -199,11 +196,6 @@ namespace TicketBooking.Migrations
                         .IsRequired();
 
                     b.Navigation("Cinema");
-                });
-
-            modelBuilder.Entity("TicketBooking.Models.Movie", b =>
-                {
-                    b.Navigation("Actors");
                 });
 #pragma warning restore 612, 618
         }

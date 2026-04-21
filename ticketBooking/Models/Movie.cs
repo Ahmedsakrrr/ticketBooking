@@ -9,7 +9,8 @@
         public bool Statu { get; set; }
         public DateTime DateTime { get; set; }
         public string MinImg { get; set; }= "defaultImage.png";
-        public List<Actor> Actors { get; set; }
+        public Actor Actors { get; set; }
+        public int ActorId { get; set; }
         public Category Category { get; set; }
         public int CategoryId { get; set; }
         public Cinema Cinema { get; set; }

@@ -5,25 +5,19 @@
 namespace TicketBooking.Migrations
 {
     /// <inheritdoc />
-    public partial class AddNewColumnInMovie : Migration
+    public partial class AddInitCinemaTable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AddColumn<string>(
-                name: "Kind",
-                table: "Movies",
-                type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+            migrationBuilder.Sql("insert into Cinemas (name, description, img, price) values ('Alex', 'A', '1.jpg', 30.0);");
+
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropColumn(
-                name: "Kind",
-                table: "Movies");
+            migrationBuilder.Sql("delete from Cinemas ");
         }
     }
 }
