@@ -13,6 +13,7 @@ namespace TicketBooking.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Cinema> Cinemas { get; set; }
         public DbSet<Movie> Movies { get; set; }
+        public DbSet<Book> Books { get; set; }
         public DbSet<MovieSubImg> MovieSubImgs { get; set; }
 
     }
