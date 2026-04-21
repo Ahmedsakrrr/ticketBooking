@@ -9,5 +9,17 @@ namespace TicketBooking.Areas.Admin.Controllers
         {
             return View();
         }
+        public IActionResult NotFoundPage()
+        {
+            return View();
+        }
+        public IActionResult UnauthorizedPage()
+        {
+            return View();
+        }
+        public IActionResult InternalServer()
+        {
+            return View();
+        }
     }
 }

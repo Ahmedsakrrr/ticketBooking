@@ -1,0 +1,248 @@
+﻿@model IEnumerable<Movie>
+
+
+
+
+
+
+
+
+
+
+<!-- Filter Section -->
+<section class="py-3 filter-bar">
+    <div class="container">
+        <div class="row" style="background-color: rgba(var(--bs-light-rgb), var(--bs-bg-opacity)) !important;">
+            <div class="col-12">
+                <form>
+                    <div class="row">
+                        <!-- Movie Name -->
+                        <div class="col-md-3">
+                            <input type="text" class="form-control" name="Name" value="@ViewBag.Name" placeholder="Movie Name">
+                        </div>
+
+                        <!-- Price  -->
+                       
+                        <div class="col-md-2">
+                            <input type="number" class="form-control" name="Price" value="@ViewBag.Price" placeholder="Price">
+                        </div>
+
+                        <!-- Category -->
+                        <div class="col-md-2">
+                            <select class="form-control" name="CategoryId">
+                                <option>--Select Category--</option>
+                                @foreach (var category in ViewBag.Categories)
+                                {
+                                    if (ViewBag.CategoryId != null && ViewBag.CategoryId == category.Id)
+                                    {
+                                        <option value="@category.Id" selected>@category.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@category.Id">@category.Name</option>
+                                    }
+                                }
+                                
+                                
+                            </select>
+                        </div>
+                        <!-- Cinema -->
+                        <div class="col-md-2">
+                            <select class="form-control" name="CinemaId">
+                                <option>--Select Cinema--</option>
+
+                                @foreach (var cinema in ViewBag.Cinemas)
+                                {
+                                    if (ViewBag.CinemaId != null && ViewBag.CinemaId == cinema.Id)
+                                    {
+                                        <option value="@cinema.Id" selected>@cinema.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@cinema.Id">@cinema.Name</option>
+                                    }
+                                    
+                                }
+                                
+                            </select>
+                        </div>
+                        <!-- Actor -->
+                        <div class="col-md-2">
+                            <select class="form-control" name="ActorId">
+                                <option>--Select Actor--</option>
+
+                                @foreach (var actor in ViewBag.Actors)
+                                {
+                                    if (ViewBag.ActorId != null && ViewBag.ActorId == actor.Id)
+                                    {
+                                        <option value="@actor.Id" selected>@actor.Name</option>
+                                    }
+                                    else
+                                    {
+                                        <option value="@actor.Id">@actor.Name</option>
+                                    }
+                                    
+                                }
+                                
+                            </select>
+                        </div>
+                        <!-- Hot Product Checkbox -->
+                        <div class="col-md-1">
+                            <div class="form-check">
+                                <input type="checkbox" class="form-check-input" value="True" name="IsHot"
+                                @* @(ViewBag.IsHot ? "checked" : "") *@>
+                                <label class="form-check-label">Hot</label>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-md-2">
+                            <button type="submit" class="btn btn-dark w-100">Filter</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+
+
+
+<div class="container">
+<div class="row mb-3 align-items-center my-3">
+    <div class="col-md-6">
+        <h2 class="display-6">All Movies</h2>
+    </div>
+    <div class="col-md-6 text-md-end text-start mt-2 mt-md-0">
+            <a class="btn btn-success" href="/Admin/Movie/Create">Create</a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Name</th>
+                        <td>Price</td>
+                        <td>DateTime</td>
+                        <td>Actor Name</td>
+                        <td>Category Name</td>
+                        <td>Cinema Name</td>
+                    <th scope="col">Description</th>
+                    <th scope="col">Img</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var movie in Model)
+                    {
+                        <tr>
+                            <th scope="row" >@movie.Id</th>
+                            <td>@movie.Name</td>
+                            <td>@movie.Price</td>
+                            <td>@movie.DateTime</td>
+                            <td>@movie.Actors.Name</td>
+                            <td>@movie.Category.Name</td>
+                            <td>@movie.Cinema.Name</td>
+                            <td>@movie.Description</td>
+                            <td><img src="~/Movieimage/@movie.MinImg" alt="@movie.Name" width="100" /></td>
+                         
+                            
+                                
+                            
+                            <td>
+                                <a type="button" class="btn btn-warning" href="/Admin/Movie/Edit/@movie.Id">Edit</a>
+                                <a class="btn btn-danger btn-delete"
+                                       data-url="/Admin/Movie/Delete/@movie.Id">
+                                    Delete
+                                </a>
+                            </td>
+                           
+                        </tr>
+                        
+                    }
+                    
+            </tbody>
+        </table>
+    </div>
+</div>
+</div>
+<!-- #Pagination -->
+<nav aria-label="Page navigation example">
+    <ul class="pagination ">
+        <li class="page-item @(ViewBag.currentPage == 1 ? "disabled" : "")">
+            <a class="page-link" href="/Admin/Movie/Index?page=@(ViewBag.currentPage - 1)" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+                <span class="sr-only">Previous</span>
+            </a>
+        </li>
+        @for (int i = 1; i <= ViewBag.TotalPages; i++)
+        {
+           
+            <li class="page-item active"><a class="page-link" href="/Admin/Movie/Index?page=@i">@i</a></li>
+        }
+        
+        
+        <li class="page-item @(ViewBag.currentPage == ViewBag.TotalPages ? "disabled" : "") ">
+            <a class="page-link" href="/Admin/Movie/Index?page=@(ViewBag.currentPage + 1)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+                <span class="sr-only">Next</span>
+            </a>
+        </li>
+    </ul>
+</nav>
+
+
+
+<script>
+    document.querySelectorAll(".btn-delete").forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            let url = this.dataset.url;
+            let row = this.closest("tr"); // علشان نحذف الصف من الجدول
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    fetch(url, {
+                        method: "POST"
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            // حذف الصف من الجدول بدون refresh 🔥
+                            row.remove();
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Movie has been deleted.',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire('Error!', 'Delete failed.', 'error');
+                        }
+                    });
+
+                }
+            });
+        });
+    });
+</script>
