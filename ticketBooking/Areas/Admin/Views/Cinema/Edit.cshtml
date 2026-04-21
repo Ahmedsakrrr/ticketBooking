@@ -1,0 +1,41 @@
+﻿@model Cinema
+<div class="container">
+    <div class="row mb-3 align-items-center my-3">
+        <div class="col-md-6">
+            <h2 class="display-6">Edit Cinema</h2>
+        </div>
+    </div>
+
+    <div class="row my-3">
+        <div class="col-12">
+            <form method="post">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input class="form-control" name="Name" value="@Model.Name" />
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Description</label>
+                    <div class="form-floating">
+                        <textarea class="form-control" name="Description" placeholder="Leave a description here" style="height: 100px">@Model.Description </textarea>
+                        <label for="description">You Description Here...</label>
+
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="Img" class="form-label">Img</label>
+                    <input type="file" name="file" class="form-control" accept="image/*" onchange="previewImage(event)">
+                    <span class="text-danger"></span>
+
+                </div>
+
+                <div class="mb-3">
+                    <img id="preview"
+                         src="~/CimaImage/@Model.Img"
+                         alt="Current Image"
+                         style="max-width: 200px; border:1px solid #ccc; padding:5px; border-radius:10px;" />
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+            </form>
+        </div>
+    </div>
+</div>
