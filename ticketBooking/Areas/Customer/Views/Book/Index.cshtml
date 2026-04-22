@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<Book>
 
-<div class="container mt-5 pt-5">
+<div class="container mt-5 pt-4">
     <h2 class="text-center mb-4 text-white p-2 rounded" style="background: rgba(0,0,0,0.5)">Booked Appointments</h2>
 
     <div class="table-responsive bg-white p-3 rounded shadow">
@@ -25,8 +25,11 @@
                         <td>@item.Movie?.DateTime.ToShortDateString()</td>
                         <td><i class="bi bi-clock me-1"></i>@item.Movie?.DateTime.ToShortTimeString()</td>
                         <td>
-                            <a href="#" class="btn btn-sm btn-primary">Edit</a>
-                            <a href="#" class="btn btn-sm btn-danger">Delete</a>
+                            <a href="/Customer/Book/Edit/@item.Id" class="btn btn-sm btn-primary">Edit</a>
+                            <a class="btn btn-danger btn-delete"
+                                   data-url="/Customer/Book/Delete/@item.Id">
+                                Delete
+                            </a>
                         </td>
                     </tr>
                 }
@@ -34,3 +37,45 @@
         </table>
     </div>
 </div>
+<script>
+    document.querySelectorAll(".btn-delete").forEach(button => {
+        button.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            let url = this.dataset.url;
+            let row = this.closest("tr"); // علشان نحذف الصف من الجدول
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "You won't be able to revert this!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, delete it!'
+            }).then((result) => {
+                if (result.isConfirmed) {
+
+                    fetch(url, {
+                        method: "POST"
+                    })
+                    .then(res => {
+                        if (res.ok) {
+                            // حذف الصف من الجدول بدون refresh 🔥
+                            row.remove();
+
+                            Swal.fire(
+                                'Deleted!',
+                                'Actor has been deleted.',
+                                'success'
+                            );
+                        } else {
+                            Swal.fire('Error!', 'Delete failed.', 'error');
+                        }
+                    });
+
+                }
+            });
+        });
+    });
+</script>
